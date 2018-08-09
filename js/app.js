@@ -17,6 +17,11 @@ Enemy.prototype.update = function(dt) {
 	// You should multiply any movement by the dt parameter
 	// which will ensure the game runs at the same speed for
 	// all computers.
+	if (this.x < 500) {
+		this.x = this.x + (this.speed * dt);
+	} else {
+		this.x = -200;
+	}
 };
 
 // Draw the enemy on the screen, required method for game
@@ -31,13 +36,34 @@ Enemy.prototype.render = function() {
 var Player = function(x, y) {
 	this.x = x;
 	this.y = y;
+	this.xmovement = 101;
+	this.ymovement = 83;
+	this.xmin = 1;
+	this.xmax = 405;
+	this.ytop = -10;
+	this.ybottom = 405;
 	this.sprite = 'images/purpl.png';
-	this.update = function (dt) {};
+	this.update = function () {};
 	this.render = function () {
 		ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+	};
+	this.handleInput = function(keypress) {
+		switch (true) {
+		case (keypress == 'left' && this.x > this.xmin):
+			this.x = this.x - this.xmovement;
+			break;
+		case (keypress == 'right' && this.x < this.xmax):
+			this.x = this.x + this.xmovement;
+			break;
+		case (keypress == 'up' && this.y > this.ytop):
+			this.y = this.y - this.ymovement;
+			break;
+		case (keypress == 'down' && this.y < this.ybottom):
+			this.y = this.y + this.ymovement;
+			break;
 		}
-
-}
+	};
+};
 
 
 
@@ -45,11 +71,13 @@ var Player = function(x, y) {
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 
-var enemyone = new Enemy(45, 1, 63);
-var enemytwo = new Enemy(90, 150, 146);
-var enemythree = new Enemy(135, 350, 229);
+var enemyone = new Enemy(145, 1, 63);
+var enemytwo = new Enemy(145, 250, 63);
+var enemythree = new Enemy(170, 50, 146);
+var enemyfour = new Enemy(130, 450, 229);
+var enemyfive = new Enemy(130, 110, 229);
 
-var allEnemies = [enemyone, enemytwo, enemythree];
+var allEnemies = [enemyone, enemytwo, enemythree, enemyfour, enemyfive];
 var player = new Player(203, 405);
 
 
