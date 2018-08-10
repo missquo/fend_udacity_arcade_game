@@ -40,28 +40,52 @@ var Player = function(x, y) {
 	this.ymovement = 83;
 	this.xmin = 1;
 	this.xmax = 405;
-	this.ytop = -10;
-	this.ybottom = 405;
+	this.ytop = -20;
+	this.ybottom = 395;
 	this.sprite = 'images/purpl.png';
-	this.update = function () {};
-	this.render = function () {
-		ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-	};
-	this.handleInput = function(keypress) {
-		switch (true) {
-		case (keypress == 'left' && this.x > this.xmin):
-			this.x = this.x - this.xmovement;
-			break;
-		case (keypress == 'right' && this.x < this.xmax):
-			this.x = this.x + this.xmovement;
-			break;
-		case (keypress == 'up' && this.y > this.ytop):
-			this.y = this.y - this.ymovement;
-			break;
-		case (keypress == 'down' && this.y < this.ybottom):
-			this.y = this.y + this.ymovement;
-			break;
+	this.gameover = false;
+	this.handleInput = keypress => {
+		console.log(this.gameover);
+		if (!this.gameover) {
+			switch (true) {
+			case (keypress == 'left' && this.x > this.xmin):
+				this.x = this.x - this.xmovement;
+				break;
+			case (keypress == 'right' && this.x < this.xmax):
+				this.x = this.x + this.xmovement;
+				break;
+			case (keypress == 'up' && this.y > this.ytop):
+				this.y = this.y - this.ymovement;
+				break;
+			case (keypress == 'down' && this.y < this.ybottom):
+				this.y = this.y + this.ymovement;
+				break;
+			}
 		}
+	};
+
+	this.update = () => {
+		// Set range for collision 
+		this.xrange = enemylocation => {
+			let range = 55;
+			return enemylocation <= (this.x + range) && enemylocation >= (this.x - range);
+		};
+		// Detect collision detection
+		allEnemies.forEach(ladybug => {
+			if (this.y == ladybug.y && this.xrange(ladybug.x)) {
+				this.sprite = 'images/squash.png';
+				// End of game display
+				this.endGame('lose');
+			}
+		});
+		// End of game display
+		if (this.y == this.ytop) {
+			this.endGame('win');
+		}
+	};
+
+	this.render = () => {
+		ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 	};
 };
 
@@ -77,8 +101,8 @@ var enemythree = new Enemy(170, 50, 146);
 var enemyfour = new Enemy(130, 450, 229);
 var enemyfive = new Enemy(130, 110, 229);
 
-var allEnemies = [enemyone, enemytwo, enemythree, enemyfour, enemyfive];
-var player = new Player(203, 405);
+let allEnemies = [enemyone, enemytwo, enemythree, enemyfour, enemyfive];
+let player = new Player(203, 395);
 
 
 
