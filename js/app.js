@@ -43,9 +43,8 @@ var Player = function(x, y) {
 	this.ytop = -20;
 	this.ybottom = 395;
 	this.sprite = 'images/purpl.png';
-	this.gameover = false;
+	this.gameover;
 	this.handleInput = keypress => {
-		console.log(this.gameover);
 		if (!this.gameover) {
 			switch (true) {
 			case (keypress == 'left' && this.x > this.xmin):
@@ -75,13 +74,18 @@ var Player = function(x, y) {
 			if (this.y == ladybug.y && this.xrange(ladybug.x)) {
 				this.sprite = 'images/squash.png';
 				// End of game display
-				this.endGame('lose');
-			}
+				this.gameover = 'lose';
+				setTimeout(() => { 
+					gameEnd(this.gameover);}, 1000);
+				}
 		});
+
 		// End of game display
 		if (this.y == this.ytop) {
-			this.endGame('win');
-		}
+			this.gameover = 'win';
+			setTimeout(() => { 
+				gameEnd(this.gameover);}, 1000);
+				}
 	};
 
 	this.render = () => {
@@ -89,7 +93,26 @@ var Player = function(x, y) {
 	};
 };
 
+var gameEnd = (status) => {
+	let modal = document.querySelector('#modal');
+	modal.classList.add('modal');
+	let text = '';
+	if (status == 'win') {
+		text = 'Congratulations!<br>You win!';
+	} else {
+		text = 'Sorry!<br>You\'ve lost!';
+	}
+	let headline = document.querySelector('#gameMessage');
+	headline.innerHTML = text;
+	let button = document.querySelector('span');
+	button.classList.add('button');
+	button.textContent = 'Play again?';
 
+	button.addEventListener('click', function(){
+  	    location.reload();
+  	});
+
+};
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
@@ -104,6 +127,10 @@ var enemyfive = new Enemy(130, 110, 229);
 let allEnemies = [enemyone, enemytwo, enemythree, enemyfour, enemyfive];
 let player = new Player(203, 395);
 
+if (player.gameover) {
+	console.log('whoooooooooooooooo');
+	gameEnd(player.gameover);
+}
 
 
 // This listens for key presses and sends the keys to your
