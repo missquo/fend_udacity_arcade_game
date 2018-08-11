@@ -1,39 +1,38 @@
 body {
-    text-align: center;
+	text-align: center;
 }
 
 .modal {
-    display: block;
-    position: fixed;
-    z-index: 1;
-    top: 196px;
-    left: 50%;
-    transform: translate(-50%, 0);
-    width: 333px; 
-    height: 243px; 
-    border-radius: 25px; 
-    background-color: rgba(0,100,0,0.7); 
-    color: #FFF;
-    text-align: center;
-    font-family: 'trebuchet MS';
-    font-size: 1.2em;
-}
-
-.gameMessage {
-	margin-top: 20px;
+	display: block;
+	position: fixed;
+	z-index: 1;
+	top: 196px;
+	left: 50%;
+	transform: translate(-50%, 0);
+	width: 340px; 
+	height: 240px; 
+	border-radius: 25px; 
+	background-color: rgba(0,100,0,0.7); 
+	color: #FFF;
+	font-family: 'trebuchet MS';
+	font-size: 1.3em;
 }
 
 .button {
-	display: block;
-	text-align: center;
-	vertical-align: middle;
-	left: 50%;
-    transform: translate(-50%, 0);
-    border-radius: 5px;
-	margin-top: 45px;
-	background: blue;
+	display: inline-block;
+	margin-left: auto;
+	margin-right: auto;
+	border-radius: 5px;
+	background: #495EB9;
 	cursor: pointer;
 	padding: 10px;
 	color: #FFF;
+	font-size: 1em;
+	font-weight: bold;
 }
 
+.button:hover {
+	color: #495EB9;
+	background: #D5CABE;
+	cursor: pointer;
+}

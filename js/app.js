@@ -32,7 +32,6 @@ Enemy.prototype.render = function() {
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
-
 var Player = function(x, y) {
 	this.x = x;
 	this.y = y;
@@ -43,9 +42,10 @@ var Player = function(x, y) {
 	this.ytop = -20;
 	this.ybottom = 395;
 	this.sprite = 'images/purpl.png';
-	this.gameover;
+	this.gameOver;
+	// Handles player movement
 	this.handleInput = keypress => {
-		if (!this.gameover) {
+		if (!this.gameOver) {
 			switch (true) {
 			case (keypress == 'left' && this.x > this.xmin):
 				this.x = this.x - this.xmovement;
@@ -63,42 +63,49 @@ var Player = function(x, y) {
 		}
 	};
 
+	// Watches player to detect collision or game win
 	this.update = () => {
 		// Set range for collision 
-		this.xrange = enemylocation => {
-			let range = 55;
-			return enemylocation <= (this.x + range) && enemylocation >= (this.x - range);
+		this.xrange = enemyLocation => {
+			let range = 75;
+			return enemyLocation <= (this.x + range) && enemyLocation >= (this.x - range);
 		};
-		// Detect collision detection
+		// Detect collision
 		allEnemies.forEach(ladybug => {
 			if (this.y == ladybug.y && this.xrange(ladybug.x)) {
 				this.sprite = 'images/squash.png';
-				// End of game display
-				this.gameover = 'lose';
-				setTimeout(() => { 
-					gameEnd(this.gameover);}, 1000);
-				}
+				// Lost game modal
+				this.gameOver = 'lose';
+				setTimeout(() => {gameEnd(this.gameOver);}, 500);
+			}
 		});
-
-		// End of game display
+		// Won game modal
 		if (this.y == this.ytop) {
-			this.gameover = 'win';
-			setTimeout(() => { 
-				gameEnd(this.gameover);}, 1000);
-				}
+			this.gameOver = 'win';
+			setTimeout(() => {gameEnd(this.gameOver);}, 500);
+		}
 	};
 
+	// Renders player
 	this.render = () => {
 		ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 	};
+
+	// Resets player after win
+	this.reset = () => {
+		this.x = 203;
+		this.y = 395;
+	};
 };
 
+// Loads game end modal
 var gameEnd = (status) => {
 	let modal = document.querySelector('#modal');
 	modal.classList.add('modal');
 	let text = '';
 	if (status == 'win') {
 		text = 'Congratulations!<br>You win!';
+		player.reset();
 	} else {
 		text = 'Sorry!<br>You\'ve lost!';
 	}
@@ -107,35 +114,25 @@ var gameEnd = (status) => {
 	let button = document.querySelector('span');
 	button.classList.add('button');
 	button.textContent = 'Play again?';
-
-	button.addEventListener('click', function(){
-  	    location.reload();
-  	});
-
+	button.addEventListener('click', () => {
+		location.reload();
+	});
 };
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-
 var enemyone = new Enemy(145, 1, 63);
 var enemytwo = new Enemy(145, 250, 63);
-var enemythree = new Enemy(170, 50, 146);
-var enemyfour = new Enemy(130, 450, 229);
-var enemyfive = new Enemy(130, 110, 229);
-
-let allEnemies = [enemyone, enemytwo, enemythree, enemyfour, enemyfive];
-let player = new Player(203, 395);
-
-if (player.gameover) {
-	console.log('whoooooooooooooooo');
-	gameEnd(player.gameover);
-}
-
+var enemythree = new Enemy(230, 50, 146);
+var enemyfour = new Enemy(180, 450, 229);
+var enemyfive = new Enemy(180, 110, 229);
+var allEnemies = [enemyone, enemytwo, enemythree, enemyfour, enemyfive];
+var player = new Player(203, 395);
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
-document.addEventListener('keyup', function(e) {
+document.addEventListener('keyup', e => {
 	var allowedKeys = {
 		37: 'left',
 		38: 'up',
